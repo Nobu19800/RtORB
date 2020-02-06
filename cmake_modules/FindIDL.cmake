@@ -4,7 +4,7 @@ if(UNIX)
   if(NOT IDL_LIBRARY_DIRS)
     find_library(
       IDL_LIBRARY IDL-2
-      PATHS PATHS /usr/lib/ /home/lib/ /usr/local/lib/ /lib/
+      PATHS PATHS /usr/lib/ /home/lib/ /usr/local/lib/ /lib/ /usr/lib/x86_64-linux-gnu/
       NO_DEFAULT_PATH)
 
    if(NOT IDL_LIBRARY)

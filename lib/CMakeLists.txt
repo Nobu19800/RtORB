@@ -37,7 +37,7 @@ set(SOURCES
 
 	#pthread.c
 
-set(IDL_EXE ${CMAKE_SOURCE_DIR}/idl-compiler/rtorb-idl)
+set(IDL_EXE ${CMAKE_BINARY_DIR}/idl-compiler/rtorb-idl)
 set(IDL_SOURCES ${CMAKE_SOURCE_DIR}/idl/CosNaming.idl)
 
 add_custom_command( OUTPUT ${OUTPUT_SOURCES}
@@ -72,14 +72,22 @@ set_target_properties(${TARGET}-static PROPERTIES PREFIX "lib")
 SET_TARGET_PROPERTIES(${TARGET}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 ENDIF()
 
-include_directories(/usr/include ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib )
+include_directories(/usr/include ${GLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib )
 
 
 IF("${OS_NAME}" MATCHES "FreeBSD")
 target_link_libraries(${TARGET} uuid)
 ELSEIF("${OS_NAME}" MATCHES "CYGWIN_NT-5.1")
 target_link_libraries(${TARGET} uuid)
+ELSEIF("${OS_NAME}" MATCHES "Linux")
+target_link_libraries(${TARGET} uuid ${GLIB_LIBRARIES})
 ENDIF()
 
+install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS ${TARGET}-static LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                                 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_subdirectory(CXX)

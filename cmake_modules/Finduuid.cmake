@@ -4,7 +4,7 @@ if(UNIX)
   if(NOT UUID_LIBRARY_DIRS)
     find_library(
       UUID_LIBRARY uuid
-      PATHS PATHS /usr/lib/ /home/lib/ /usr/local/lib/ /lib/
+      PATHS PATHS /usr/lib/ /home/lib/ /usr/local/lib/ /lib/ /usr/lib/x86_64-linux-gnu/
       NO_DEFAULT_PATH)
 
    if(NOT UUID_LIBRARY)

@@ -6,7 +6,7 @@ set(ORBIT_VERSION "0.1")
 set(orbit_backends_dir "/usr/lib/orbit-2.0/idl-backend")
 set(PROJECT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/idl-compiler)
 
-set(ORBIT_INCLUDE_DIR "/usr/local/include/libIDL-2.0" "/usr/include/libIDL-2.0" "/usr/include/glib-2.0" "/usr/lib/glib-2.0/include" "/usr/local/include/glib-2.0" "${PROJECT_INCLUDE_DIR}" "/usr/include/")
+set(ORBIT_INCLUDE_DIR "/usr/local/include/libIDL-2.0" "/usr/include/libIDL-2.0" "/usr/include/glib-2.0" "/usr/lib/glib-2.0/include" "/usr/local/include/glib-2.0" "${PROJECT_INCLUDE_DIR}" "/usr/include/" ${GLIB_INCLUDE_DIRS})
 
 
 set(CMAKE_CXX_FLAGS -g -Wall -Wunused -Wmissing-prototypes -Wmissing-declarations)
@@ -30,5 +30,5 @@ add_executable(${TARGET} ${IDL_SOURCE})
 
 target_link_libraries(${TARGET} ${LINK_LIB})
 
-install(PROGRAMS ${PROJECT_SOURCE_DIR}/idl-compiler/rtorb-idl DESTINATION  ${PROJECT_SOURCE_DIR}/bin/)
-
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/rtorb-idl DESTINATION  ${PROJECT_SOURCE_DIR}/bin/)
+install(TARGETS ${TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
