@@ -2,11 +2,15 @@
 cmake_minimum_required(VERSION 2.6)
 set(TARGET RtORB)
 
+set(OUTPUT_HEADERS
+    ${CMAKE_CURRENT_BINARY_DIR}/CosName/CosNaming.h
+)
+
 set(OUTPUT_SOURCES
-    ${CMAKE_SOURCE_DIR}/CosName/CosNaming-common.c
-    ${CMAKE_SOURCE_DIR}/CosName/CosNaming-stubs.c
-    ${CMAKE_SOURCE_DIR}/CosName/CosNaming.h
-    ${CMAKE_SOURCE_DIR}/CosName/CosNaming-skels.c)
+    ${CMAKE_CURRENT_BINARY_DIR}/CosName/CosNaming-common.c
+    ${CMAKE_CURRENT_BINARY_DIR}/CosName/CosNaming-stubs.c
+    ${OUTPUT_HEADERS}
+    ${CMAKE_CURRENT_BINARY_DIR}/CosName/CosNaming-skels.c)
     #${CMAKE_SOURCE_DIR}/CosName/NameService_impl.c)
 
 set(SOURCES 
@@ -40,11 +44,13 @@ set(SOURCES
 set(IDL_EXE ${CMAKE_BINARY_DIR}/idl-compiler/rtorb-idl)
 set(IDL_SOURCES ${CMAKE_SOURCE_DIR}/idl/CosNaming.idl)
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CosName)
+
 add_custom_command( OUTPUT ${OUTPUT_SOURCES}
   COMMAND ${IDL_EXE} ${IDL_SOURCES}
-  COMMAND ${IDL_EXE}  --skeleton-impl ${IDL_SOURCES}
-  COMMAND mv CosNaming* ${CMAKE_SOURCE_DIR}/CosName/
+  COMMAND ${IDL_EXE} --skeleton-impl ${IDL_SOURCES}
   DEPENDS iop.c 
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CosName
   )
 
 
@@ -72,7 +78,9 @@ set_target_properties(${TARGET}-static PROPERTIES PREFIX "lib")
 SET_TARGET_PROPERTIES(${TARGET}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 ENDIF()
 
-include_directories(/usr/include ${GLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib )
+target_compile_options(${TARGET} PRIVATE $<$<CONFIG:Debug>:-O0>)
+
+include_directories(/usr/include ${GLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib  ${CMAKE_CURRENT_BINARY_DIR})
 
 
 IF("${OS_NAME}" MATCHES "FreeBSD")
@@ -89,5 +97,6 @@ install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 install(TARGETS ${TARGET}-static LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
                                  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES ${OUTPUT_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CosName)
 
 add_subdirectory(CXX)
