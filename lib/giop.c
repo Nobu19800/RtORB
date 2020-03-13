@@ -189,7 +189,6 @@ int reply_Message(GIOP_ConnectionHandler *h, GIOP_RequestHeader *request_header,
     fprintf(stderr, "ERROR in reply_Message: Fail to allocate buffer(%d)\n", alloc_size);
     return -1;
   }
-  memset(msgbuf, 0, alloc_size);
 
   if (version < 2){
     header._1_0.service_context.num = 0;
@@ -389,7 +388,6 @@ GIOP_ReplyBody *invokeServant(PortableServer_POA poa,
            char *reply_buf = NULL;
 	   int size = 0;
            reply_buf = (char *)RtORB_alloc( MaxMessageSize, "invokeServant(USER_EXCEPTION)");
-           memset(reply_buf, 0, MaxMessageSize );
 
 	   fprintf(stderr, "User exception(%s): %s\n",
 			   function, env->_repo_id);
@@ -453,7 +451,6 @@ int reply_locateMessage(PortableServer_POA poa, GIOP_ConnectionHandler *h,
   char *ior = NULL;   /* Not use */
   
   buf = (unsigned char *)RtORB_alloc( MaxMessageSize, "reply_locateMessage");
-  memset(buf, 0, MaxMessageSize);
   
   GIOP_LocateReplyHeader header;
   if (version < 2){
@@ -489,7 +486,6 @@ uint32_t createRequest(octet *buf, int response,
 
   GIOP_RequestHeader *header = (GIOP_RequestHeader *)newRequestHeader();
 
-  memset(buf, 0, MaxMessageSize);
 
   GIOP_MessageHeader *MsgHeader = GIOP_Create_MessageHeader(RTORB_BYTE_ORDER, version);
   MsgHeader->message_type = GIOP_Request ;
@@ -525,7 +521,6 @@ uint32_t createCancelRequest(octet *buf, uint32_t request_id)
   uint32_t version = 2;
   int current = SIZEOF_GIOP_HEADER;
 
-  memset(buf, 0, MaxMessageSize);
 
   GIOP_MessageHeader *MsgHeader = GIOP_Create_MessageHeader(RTORB_BYTE_ORDER, version);
   MsgHeader->message_type = GIOP_CancelRequest ;
@@ -544,7 +539,6 @@ int createLocateRequest(octet *buf, char *object_key, int len){
   int version = 2;
   GIOP_LocateRequestHeader Header;
 
-  memset(buf, 0, MaxMessageSize);
 
   GIOP_MessageHeader *MsgHeader = GIOP_Create_MessageHeader(RTORB_BYTE_ORDER, version);
   MsgHeader->message_type = GIOP_LocateRequest ;
@@ -577,7 +571,6 @@ uint32_t createCloseConnectionMessage(octet *buf)
 {
   uint32_t version = 2;
 
-  memset(buf, 0, MaxMessageSize);
 
   GIOP_MessageHeader *MsgHeader = GIOP_Create_MessageHeader(RTORB_BYTE_ORDER, version);
   MsgHeader->message_type = GIOP_CloseConnection ;
@@ -594,7 +587,6 @@ uint32_t createCloseConnectionMessage(octet *buf)
 uint32_t createMessageErrorMessage(octet *buf){
   uint32_t version = 0;
 
-  memset(buf, 0, MaxMessageSize);
 
   GIOP_MessageHeader *MsgHeader = GIOP_Create_MessageHeader(RTORB_BYTE_ORDER, version);
   MsgHeader->message_type = GIOP_MessageError ;
@@ -619,7 +611,6 @@ int requestLocation(GIOP_ConnectionHandler *h, CORBA_URL *ior){
     fprintf(stderr, "ERROR in requestLocation: Fail to allocate buffer..\n");
     return -1;
   }
-  memset(buf, 0, MaxMessageSize);
 
   len = createLocateRequest((octet *)buf, ior->object_key, ior->object_key_len);
   ret = GIOP_ConnectionHandler_send(h, buf, len);
@@ -644,12 +635,10 @@ int confirmLocation(GIOP_ConnectionHandler *h, CORBA_URL *ior){
     fprintf(stderr, "ERROR in confirmLocation: Fail to allocate buffer..\n");
     return -1;
   }
-  memset(buf, 0, MaxMessageSize);
 
   len = createLocateRequest((octet *)buf, ior->object_key, ior->object_key_len);
   GIOP_ConnectionHandler_send(h, buf, len);
 
-  memset(buf, 0, MaxMessageSize);
 
   if(receiveMessage(h, &header, (octet *)buf, MaxMessageSize) < 0){
     RtORB_free( buf , "confirmLocation:receiveMessage");
@@ -916,7 +905,6 @@ PtrList *GIOP_enqueue_request(GIOP_ConnectionHandler *h, PtrList *lst){
 #endif
 
   buf = ( char* )RtORB_alloc( RECV_BUF_SIZE, "GIOP_enqueue_request");
-  memset(buf, 0, RECV_BUF_SIZE);
 
 
   if(receiveMessage(h, &header, (octet *)buf, RECV_BUF_SIZE) < 0){
@@ -963,7 +951,6 @@ int RecvMessage(GIOP_ConnectionHandler *h){
   }
 
   memset(&header, 0, SIZEOF_GIOP_HEADER);
-  memset(recvbuf, 0, recvBufSize);
 
   body = (CORBA_Sequence_Octet *)new_CORBA_Sequence_Octet(0);
 

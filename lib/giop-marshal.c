@@ -874,8 +874,7 @@ demarshal_by_typecode(void **dist, CORBA_TypeCode tc, octet *buf, int *current, 
 	    {
               char *buf_ = NULL;
 
-              buf_ = (char *)RtORB_alloc( 4096, "demarshal_by_typecode:tk_any" );
-              memset(buf, 0, 4096);
+        buf_ = (char *)RtORB_alloc( 4096, "demarshal_by_typecode:tk_any" );
 
 	      int len = 0;
 	      marshal_by_typecode((octet *)buf_, ptr, tc_, &len);
@@ -1323,7 +1322,6 @@ Marshal_Reply_Arguments(GIOP_ReplyBody *reply,
      fprintf(stderr, "Error in Marshal_Reply_Arguments: Fail to allocate buffer...\n");
     return;
    }
-   memset(reply_buf, 0, MaxSize);
 
    Marshal_Result(reply_buf, result, m->retval, &size);
 #ifdef DEBUG_MARSHAL
@@ -1381,7 +1379,6 @@ static int marshal_typecode(octet *buf, int *current, CORBA_TypeCode tc)
       octet *buf_ = NULL;
 
       buf_ = ( octet* )RtORB_alloc( 4096, "marshal_typecode(PLT_COMPLEX)");
-      memset(buf_, 0, 4096); 
 	  
       switch(tc->kind) {
       case tk_string:
