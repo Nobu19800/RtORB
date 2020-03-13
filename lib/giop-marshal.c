@@ -686,16 +686,26 @@ demarshal_by_typecode(void **dist, CORBA_TypeCode tc, octet *buf, int *current, 
             s_tmp=sb->_buffer=(void **)RtORB_alloc_by_typecode(tc->member_type[0],
 			 len, "demarshal_by_typecode(sequence)");
 	  }
-	  for(i=0;i<len;i++){
-            offset = demarshal_by_typecode(s_tmp, tc->member_type[0], 
-					     buf, current, order);
-            if (s_tmp) {
+
+    if(tc->member_type[0]->size == 1)
+    {
+      memcpy(s_tmp, buf+(*current), len);
+      *current += len;
+      s_tmp = (void **)((char*)s_tmp + len);
+    }
+    else
+    {
+     for(i=0;i<len;i++){
+              offset = demarshal_by_typecode(s_tmp, tc->member_type[0], 
+                buf, current, order);
+              if (s_tmp) {
 #if DEBUG
-              dump_value_by_typecode(s_tmp, tc->member_type[0]);
+                dump_value_by_typecode(s_tmp, tc->member_type[0]);
 #endif
-              s_tmp = (void **)((char*)s_tmp + offset);
-	     }
-	   }
+                s_tmp = (void **)((char*)s_tmp + offset);
+        }
+      }
+    }
 	 }
        }
        break;
@@ -1082,12 +1092,24 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
 
         marshalLong(buf, current, sb->_length);
 
-        align_base = align_of_typecode(tc->member_type[0],F_DEMARSHAL);
-        for(i=0;i<sb->_length;i++){
+        if(tc->member_type[0]->size == 1)
+        {
+          align_base = align_of_typecode(tc->member_type[0],F_DEMARSHAL);
           Address_Alignment(&cpos, align_base);
           _buffer = (char *)sb->_buffer + cpos;
-          marshal_by_typecode(buf, (void **)_buffer, tc->member_type[0], current);
-          cpos += skip;
+          memcpy(buf+(*current), _buffer, sb->_length);
+          cpos += sb->_length;
+          *current += sb->_length;
+        }
+        else
+        {
+          align_base = align_of_typecode(tc->member_type[0],F_DEMARSHAL);
+          for(i=0;i<sb->_length;i++){
+            Address_Alignment(&cpos, align_base);
+            _buffer = (char *)sb->_buffer + cpos;
+            marshal_by_typecode(buf, (void **)_buffer, tc->member_type[0], current);
+            cpos += skip;
+          }
         }
       }
       break;
@@ -1427,8 +1449,8 @@ static int marshal_typecode(octet *buf, int *current, CORBA_TypeCode tc)
       /* datalen */
       marshalLong(buf, current, len_); 
       if (len_ > 0) {
-	memcpy(&buf[*current], buf_, len_);
-	*current += len_;
+	      memcpy(&buf[*current], buf_, len_);
+	      *current += len_;
       } else {
 #if DEBUG
 	fprintf(stderr, "marshal_type_code(type = %d) : data size is ZERO", (int)tc->kind);
