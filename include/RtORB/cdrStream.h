@@ -83,6 +83,7 @@ public:
 
  void *out_buf;             /*!< (TODO) */
  uint32_t out_len;    /*!< (TODO) */
+ uint32_t in_c;      /*!< (TODO) */
  uint32_t out_c;      /*!< (TODO) */
  uint32_t byte_order;  /*!< (TODO) */
 

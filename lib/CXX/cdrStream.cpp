@@ -69,7 +69,7 @@ PARAM_LIST_TYPE(unsigned int kind){
   cdrStream
 */
 
-cdrStream::cdrStream(): out_buf(0),out_len(0),out_c(0),byte_order(0){
+cdrStream::cdrStream(): out_buf(0),out_len(0),out_c(0),in_c(0),byte_order(0){
 }
 
 cdrStream::~cdrStream(){
@@ -452,6 +452,7 @@ CORBA_Object cdrStream::unmarshal_CORBA_Object(){
 cdrMemoryStream::cdrMemoryStream(int32_t initBufsize, int32_t clsMemory)
 {
   out_c=0;
+  in_c=0;
   byte_order=0;
 
   if(initBufsize){
@@ -469,6 +470,7 @@ cdrMemoryStream::cdrMemoryStream(int32_t initBufsize, int32_t clsMemory)
 cdrMemoryStream::cdrMemoryStream(void *databuffer, int32_t maxLen)
 {
   out_c=0;
+  in_c=0;
   byte_order=0;
 
   out_buf = RtORB_alloc(maxLen, "cdrMemoryStream");
@@ -479,6 +481,7 @@ cdrMemoryStream::cdrMemoryStream(void *databuffer, int32_t maxLen)
 cdrMemoryStream::cdrMemoryStream(const cdrMemoryStream& obj)
 {
   out_c=0;
+  in_c=0;
   byte_order=obj.byte_order;
   out_len= obj.out_len;
 
@@ -494,6 +497,7 @@ void cdrMemoryStream::rewindInputPtr(){
 
 void cdrMemoryStream::rewindPtrs(){
   out_c = 0;
+  in_c = 0;
   return;
 }
 
@@ -536,7 +540,7 @@ void cdrStream::get_octet_array(char *octet, int32_t size, int32_t align){
 
 void cdrStream::put_octet_array(char *octet, int32_t size, int32_t align){
   int pad;
-  int pos = out_c; 
+  int pos = in_c; 
 
   if((pad = pos % align)) pos += align - pad;
   if(pos+size > out_len){
@@ -545,7 +549,7 @@ void cdrStream::put_octet_array(char *octet, int32_t size, int32_t align){
     out_len=size+pos;
   }
   memcpy((void *)((char *)out_buf+pos), octet, size);
-  out_c = pos+size;
+  in_c = pos+size;
   return;
 }
 
@@ -573,7 +577,7 @@ int  cdrMemoryStream::checkInputOverrun(uint32_t itemSize, uint32_t nItems, int 
 int32_t cdrMemoryStream::checkOutputOverrun(uint32_t itemSize, uint32_t nItems, int32_t align){
 
   int pad;
-  int pos = out_c; 
+  int pos = in_c; 
 
   if((pad=pos % align)) pos += align - pad;
   if(pos+itemSize*nItems > out_len) return 1;
