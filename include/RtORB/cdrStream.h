@@ -90,13 +90,13 @@ public:
  int32_t _ref;                  /*!< (TODO) */
 
 #define Marshal(s, type, align, a)  do{\
-   int32_t len = sizeof(type); 	\
-   s.put_octet_array((char *) a, len, align); 	\
+   int32_t __len = sizeof(type); 	\
+   s.put_octet_array((char *) a, __len, align); 	\
   }while(0)  /*!< (TODO) */
 
 #define Unmarshal(s, type, align, a) do{\
-   int32_t len = sizeof(type); 	\
-   s.get_octet_array((char *) a, len, align); 	\
+   int32_t __len = sizeof(type); 	\
+   s.get_octet_array((char *) a, __len, align); 	\
  }while(0);  /*!< (TODO) */
 
 /*!
