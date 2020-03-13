@@ -105,7 +105,6 @@ void *cdrStream::unmarshal_sequence(int32_t size, CORBA_TypeCode tc){
   CORBA_TypeCode _tc=tc->member_type[0]; 
 
   res = RtORB_alloc(_tc->size * size, "unmarshal_sequence");
-  memset(res, 0, _tc->size * size);
 
   _ptr = (char *)res;
   len=12;

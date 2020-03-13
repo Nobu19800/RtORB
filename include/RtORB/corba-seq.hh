@@ -242,7 +242,7 @@ namespace CORBA_sequence {
       if (n <= 0) { return 0; }
       
       if (impl->_buffer == NULL) {
-	Elem *newbuf= (Elem *)RtORB_calloc(sizeof(Elem), n,  "CORBA_sequenct::T_Seq::length");
+  Elem *newbuf= (Elem *)RtORB_alloc(n*sizeof(Elem),  "CORBA_sequenct::T_Seq::length");
 	for (i=0; i<n; i++) {
 	  ElemHelper::nil(newbuf[i]);
 	}
@@ -253,7 +253,6 @@ namespace CORBA_sequence {
 	size_t oldsize = impl->_length * sizeof(Elem);
 	size_t newsize = n * sizeof(Elem);
 	Elem * newbuf = (Elem*)RtORB_realloc(impl->_buffer, newsize, "CORBA_sequenct::T_Seq::length");
-	memset(newbuf + impl->_length, 0x00, newsize - oldsize);
 	for (i=impl->_length; i<n; i++) {
 	  ElemHelper::nil(newbuf[i]);
 	}

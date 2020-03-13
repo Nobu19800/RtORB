@@ -109,7 +109,7 @@ extern "C"
 #  define RtORB_strndup(s, n, info)	RtORB__strndup(s, n, info)
 #  define RtORB_free(s, info)		RtORB__free(s, info)
 #else
-#  define RtORB_alloc(s, info)		calloc(1, s)
+#  define RtORB_alloc(s, info)		malloc(s)
 #  define RtORB_realloc(p, s, info)	realloc(p, s)
 #  define RtORB_calloc(s, n, info)	calloc(n, s)
 #  define RtORB_strdup(s, info)		strdup(s)

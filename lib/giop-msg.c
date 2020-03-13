@@ -144,7 +144,6 @@ CORBA_Sequence_Octet *new_CORBA_Sequence_Octet(int size){
   seq->_release = 0;
   if(size > 0){
     seq->_buffer = (octet *)RtORB_alloc(size, "new_CORBA_Sequence_Octet(buffer)");
-    memset(seq->_buffer, 0, size);
   }else{
     seq->_buffer = (octet *)NULL;
   }
@@ -159,7 +158,6 @@ CORBA_Sequence_Octet *new_CORBA_Sequence_Octet2(int size){
   seq->_release = 0;
   if(size > 0){
     seq->_buffer = (octet *)RtORB_alloc(size, "new_CORBA_Sequence_Octet(buffer)");
-    memset(seq->_buffer, 0, size);
   }else{
     seq->_buffer = (octet *)NULL;
   }

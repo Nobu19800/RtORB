@@ -152,7 +152,6 @@ void invokeMethod_via_GIOP(CORBA_Object obj,
   GIOP_ConnectionHandler_send(h, (char *)req_buf, len);
 
   memset(&header, 0, SIZEOF_GIOP_HEADER);
-  memset(buf, 0, MaxMessageSize);
 
   /*  receive reply */
   if(receiveMessage(h, &header, (octet *)buf, MaxMessageSize) < 0){

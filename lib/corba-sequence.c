@@ -102,7 +102,7 @@ CORBA_SequenceBase *CORBA_SequenceBase__new(int _max, int _len){
   seq->_length = _len;
   seq->_maximum = _max;
   seq->_release = 0;
-  seq->_buffer = (void **)RtORB_calloc( sizeof(void **), _max, "CORBA_Sequence__new");
+  seq->_buffer = (void **)RtORB_alloc(_max*sizeof(void **), "CORBA_Sequence__new");
   return seq;
 }
 
@@ -131,7 +131,6 @@ void CORBA_SequenceBase__clear(CORBA_SequenceBase *seq, void (*_free)()){
 	  ((free_func_type)_free)(seq->_buffer[i], "CORBA_SequenceBase__clear");
   }
   seq->_length = 0;
-  memset(seq->_buffer, 0, seq->_maximum);
   return ;
 }
 
