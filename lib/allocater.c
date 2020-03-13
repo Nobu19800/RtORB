@@ -68,7 +68,7 @@ RtORB_alloc_by_typecode(CORBA_TypeCode tc, int32_t len, const char *info){
     case tk_void:
       return NULL;
     default:
-      return (void *)RtORB_alloc(size_of_typecode(tc, F_DEMARSHAL) * len, info);
+      return (void *)RtORB_calloc(1,size_of_typecode(tc, F_DEMARSHAL) * len, info);
   }
 }
 
