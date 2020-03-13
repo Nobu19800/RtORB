@@ -1159,8 +1159,9 @@ int32_t GIOP_ConnectionHandler_send(GIOP_ConnectionHandler *h, char *buf, int32_
       res=write(h->sock, buf, len);
       fprintf(stderr, "Send Data %d (%d)\n", h->sock, res);
 #else
-      res = writeBytes(h->sock, buf, 12);
-      res += writeBytes(h->sock, buf+12, len-12);
+      //res = writeBytes(h->sock, buf, 12);
+      //res += writeBytes(h->sock, buf+12, len-12);
+      res += writeBytes(h->sock, buf, len);
 #endif
       return res;
 
