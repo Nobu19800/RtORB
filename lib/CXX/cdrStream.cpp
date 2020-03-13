@@ -88,11 +88,19 @@ void cdrStream::marshal_sequence(void *buf, int32_t size, CORBA_TypeCode tc){
 
   _ptr = (char *)buf;
   _buf = (octet *)RtORB_alloc(1024,"marshal_sequence");
-  for(int i=0 ; i < size ; i++){
-    len=0;
-    marshal_by_typecode(_buf, _ptr, _tc, &len);
-    put_octet_array((char *)_buf, len, _tc->alignment);
-    _ptr = _ptr + _tc->size;
+  if(_tc->size == 1)
+  {
+    put_octet_array((char *)_buf, size*_tc->size, _tc->alignment);
+    _ptr = _ptr + size*_tc->size;
+  }
+  else
+  {
+    for(int i=0 ; i < size ; i++){
+      len=0;
+      marshal_by_typecode(_buf, _ptr, _tc, &len);
+      put_octet_array((char *)_buf, len, _tc->alignment);
+      _ptr = _ptr + _tc->size;
+    }
   }
   RtORB_free(_buf,"marshal_sequence");
   return;
@@ -109,9 +117,17 @@ void *cdrStream::unmarshal_sequence(int32_t size, CORBA_TypeCode tc){
   _ptr = (char *)res;
   len=12;
   Address_Alignment(&len, _tc->alignment);
-  for(i=0;i<size;i++){
-    demarshal_by_typecode((void **)_ptr, _tc, (octet *)out_buf, &len, byte_order);
-    _ptr +=  _tc->size;
+  if(_tc->size == 1)
+  {
+      memcpy(_ptr, out_buf, size*_tc->size);
+      _ptr +=  size*_tc->size;
+  }
+  else
+  {
+    for(i=0;i<size;i++){
+      demarshal_by_typecode((void **)_ptr, _tc, (octet *)out_buf, &len, byte_order);
+      _ptr +=  _tc->size;
+    }
   }
   return res;
 }
