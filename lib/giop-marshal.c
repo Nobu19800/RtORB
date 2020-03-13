@@ -190,7 +190,7 @@ uint32_t align_of_typecode(CORBA_TypeCode tc, int flag)
        return max_align;
     case tk_string:
        if(flag == F_MARSHAL) return 4;
-       return sizeof(void *);
+       return 4;
     default:
       if (tc->alignment) return tc->alignment;
       else return 1;
