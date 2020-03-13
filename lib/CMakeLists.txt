@@ -80,7 +80,7 @@ ENDIF()
 
 target_compile_options(${TARGET} PRIVATE $<$<CONFIG:Debug>:-O0>)
 
-include_directories(/usr/include ${GLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/CosName)
+include_directories(/usr/include ${GLIB_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/CosName ${CMAKE_BINARY_DIR}/include)
 
 
 IF("${OS_NAME}" MATCHES "FreeBSD")
