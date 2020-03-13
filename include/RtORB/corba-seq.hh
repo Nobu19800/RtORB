@@ -500,6 +500,8 @@ namespace CORBA_sequence {
      */
     T_PtrSeq(const Seq &o) : Super(o) {}
 
+    ~T_PtrSeq() {}
+
 #if defined(Cygwin) && ( __GNUC__ < 4)
     /*!
      * @brief (TODO)

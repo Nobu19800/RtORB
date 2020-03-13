@@ -8,6 +8,11 @@ EXECUTE_PROCESS(COMMAND uname -s
                   RESULT_VARIABLE  result_val
                   OUTPUT_VARIABLE  output_val
                   ERROR_VARIABLE   error_val)
+
+IF(UNIX)
+  include(GNUInstallDirs)
+ENDIF()
+
 IF(result_val)
 ELSE()
 set(OS_NAME ${output_val})
@@ -27,3 +32,4 @@ include_directories(/usr/include/)
 add_subdirectory(idl-compiler)
 add_subdirectory(lib)
 add_subdirectory(CosName)
+add_subdirectory(include)
