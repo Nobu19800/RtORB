@@ -646,10 +646,10 @@ CORBA_Object_is_equivalent(CORBA_Object object,
   if (!object || !other_object) { return FALSE; }
 
   /* First, compare typedId if exist. They might be empty. */
-  if(object->typedId && other_object->typedId
-     && strcmp((char *)object->typedId, (const char *)other_object->typedId) == 0) {
-    return TRUE;
-  }
+  //if(object->typedId && other_object->typedId
+  //   && strcmp((char *)object->typedId, (const char *)other_object->typedId) == 0) {
+  //  return TRUE;
+  //}
   /* Second, compare object_key */
   if (object->object_key && object->object_key &&
       strcmp((char *)object->object_key, (const char *)other_object->object_key) == 0) {
