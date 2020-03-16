@@ -386,7 +386,12 @@ namespace CORBA_interface {
      * @brief (TODO)
      */ 
     T * operator->() {
-      return object();
+      T *ret = object();
+      if(ret == nullptr)
+      {
+        throw CORBA::SystemException("T_Var::object() is NULL");
+      }
+      return ret;
     }
 
     /*!
@@ -622,14 +627,24 @@ namespace CORBA_interface {
      * @brief (TODO)
      */
     T * operator->() {
-      return object();
+      T *ret = object();
+      if(ret == nullptr)
+      {
+        throw CORBA::SystemException("T_Ptr::object() is NULL");
+      }
+      return ret;
     }
 
     /*!
      * @brief (TODO)
      */    
     T * operator->() const {
-      return object();
+      T *ret = object();
+      if(ret == nullptr)
+      {
+        throw CORBA::SystemException("T_Ptr::object() is NULL");
+      }
+      return ret;
     }
 
     /*!
@@ -697,7 +712,14 @@ namespace CORBA_interface {
       }
     }
 
-    T * operator->() { return object(); }
+    T * operator->() { 
+      T *ret = object();
+      if(ret == nullptr)
+      {
+        throw CORBA::SystemException("T_SeqElemPtr::object() is NULL");
+      }
+      return ret;
+    }
 
     operator Ptr () { return Ptr(_impl); }
     operator CORBA::Object_ptr () { return CORBA::Object_ptr(_impl); }
