@@ -69,7 +69,7 @@ PARAM_LIST_TYPE(unsigned int kind){
   cdrStream
 */
 
-cdrStream::cdrStream(): out_buf(0),out_len(0),out_c(0),in_c(0),byte_order(0){
+cdrStream::cdrStream(): out_buf(nullptr),out_len(0),out_c(0),in_c(0),byte_order(0){
 }
 
 cdrStream::~cdrStream(){
@@ -430,7 +430,7 @@ CORBA_Object cdrStream::unmarshal_CORBA_Object(){
   int ior_len = 0;
 
   Address_Alignment((int *)&this->out_c, 4);
-  if (this->out_buf != NULL) {
+  if (this->out_buf != nullptr) {
      num_urls = parseIOR(&url, (octet *)this->out_buf, (int *)&this->out_c, this->byte_order);
   }
   if (num_urls > 0) {
@@ -547,16 +547,19 @@ void cdrStream::get_octet_array(char *octet, int32_t size, int32_t align){
   int pos = out_c; 
   if((pad = pos % align)){
     pos += align - pad;
-    if (pos+size > out_len) return;
   }
-  memcpy(octet, (void *)((char *)out_buf+pos), size);
+  if (pos+size > out_len) return;
+  if(size > 0)
+  {
+    memcpy(octet, (void *)((char *)out_buf+pos), size);
+  }
   out_c = pos+size;
   return;
 }
 
 void cdrStream::put_octet_array(char *octet, int32_t size, int32_t align){
   int pad;
-  int pos = in_c; 
+  int pos = in_c;
 
   if((pad = pos % align)) pos += align - pad;
   if(pos+size > out_len){
@@ -564,7 +567,10 @@ void cdrStream::put_octet_array(char *octet, int32_t size, int32_t align){
     else out_buf=RtORB_alloc(size+pos, "put_octet_array");
     out_len=size+pos;
   }
-  memcpy((void *)((char *)out_buf+pos), octet, size);
+  if(size > 0)
+  {
+    memcpy((void *)((char *)out_buf+pos), octet, size);
+  }
   in_c = pos+size;
   return;
 }
