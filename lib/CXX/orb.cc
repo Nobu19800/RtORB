@@ -110,7 +110,7 @@ namespace CORBA
     CORBA_Object obj = CORBA_ORB_string_to_object(_impl, (unsigned char*)str, &ev);
 
     catchAndThrowDefaultException(&ev);
-    return Object_ptr(obj);
+    return Object_ptr(new Object(obj));
   }
 
   void ORB::run() {
