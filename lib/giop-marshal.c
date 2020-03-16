@@ -155,7 +155,8 @@ uint32_t size_of_typecode(CORBA_TypeCode tc, int flag)
        return sizeof(CORBA_Object);
 
     case tk_string:
-       return 4;
+      if(flag == F_MARSHAL) return 4;
+      return sizeof(void *);
 
     default:
       if (tc->size) return tc->size;
