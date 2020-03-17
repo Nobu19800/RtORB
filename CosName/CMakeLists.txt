@@ -24,7 +24,7 @@ set(SOURCES NameService.c)
 
 
 link_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/RtORB/ /usr/local/lib/) 
-include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/lib/CosName)
+include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/lib/CosName ${CMAKE_BINARY_DIR}/include)
 
 
 #add_custom_command( OUTPUT ${OUTPUT_SOURCES}
@@ -36,6 +36,7 @@ include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/include ${CMAKE_
 
 
 add_executable(${TARGET} ${SOURCES})
+add_dependencies(${TARGET} RtORB)
 target_link_libraries(${TARGET} pthread RtORB )
 
 
