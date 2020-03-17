@@ -53,6 +53,8 @@ add_custom_command( OUTPUT ${OUTPUT_SOURCES}
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CosName
   )
 
+add_custom_target(RTORB_IDLTGT DEPENDS ${OUTPUT_SOURCES})
+add_dependencies(RTORB_IDLTGT rtorb-idl)
 
 
 IF("${OS_NAME}" MATCHES "FreeBSD")
@@ -68,11 +70,14 @@ IF("${OS_NAME}" MATCHES "CYGWIN_NT-5.1")
 
 link_directories(${GLIB_LIBRARY_DIRS} ${IDL_LIBRARY_DIRS} ${UUID_LIBRARY_DIRS})
 add_library(${TARGET} SHARED ${SOURCES})
+add_dependencies(${TARGET} RTORB_IDLTGT)
 ELSE()
 link_directories(${GLIB_LIBRARY_DIRS} ${IDL_LIBRARY_DIRS} ${UUID_LIBRARY_DIRS})
 add_library(${TARGET} SHARED ${SOURCES})
+add_dependencies(${TARGET} RTORB_IDLTGT)
 SET_TARGET_PROPERTIES(${TARGET} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 add_library(${TARGET}-static STATIC ${SOURCES})
+add_dependencies(${TARGET}-static RTORB_IDLTGT)
 set_target_properties(${TARGET}-static PROPERTIES OUTPUT_NAME "RtORB")
 set_target_properties(${TARGET}-static PROPERTIES PREFIX "lib")
 SET_TARGET_PROPERTIES(${TARGET}-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
