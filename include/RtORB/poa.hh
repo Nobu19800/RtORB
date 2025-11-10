@@ -80,15 +80,19 @@ namespace PortableServer{
     /*!
      * @brief (TODO)
      */
-    ObjectId_ptr activate_object(ServantBase *sb) throw (CORBA::Exception);
+    ObjectId_ptr activate_object(ServantBase *sb);
     /*!
      * @brief (TODO)
      */
-    void activate_object_with_id(ObjectId_ptr id, ServantBase *sb) throw (CORBA::Exception);
+    void activate_object_with_id(ObjectId_ptr id, ServantBase *sb);
     /*!
      * @brief (TODO)
      */
     void deactivate_object(const ObjectId &);
+      /*!
+     * @brief (TODO)
+     */
+    void reinstall_object(CORBA::Object_ptr obj, char *object_key);
 
     /*!
      * @brief (TODO)
@@ -98,15 +102,15 @@ namespace PortableServer{
     /*!
      * @brief (TODO)
      */
-    ObjectId_ptr servant_to_id(ServantBase *sb) throw (CORBA::Exception);
+    ObjectId_ptr servant_to_id(ServantBase *sb);
     /*!
      * @brief (TODO)
      */
-    CORBA::Object_ptr id_to_reference(const ObjectId &) throw (CORBA::Exception);
+    CORBA::Object_ptr id_to_reference(const ObjectId &);
     /*!
      * @brief (TODO)
      */
-    CORBA::Object_ptr servant_to_reference(ServantBase *) throw (CORBA::Exception);
+    CORBA::Object_ptr servant_to_reference(ServantBase *);
 
     /*!
      * @brief (TODO)
@@ -289,13 +293,13 @@ namespace PortableServer{
     /*!
      * @brief (TODO)
      */
-    static POA_ptr _root_POA() throw (CORBA::Exception);
+    static POA_ptr _root_POA();
 
     /*!
      * @brief (TODO)
      */
-    CORBA_Object __this(CORBA_Environment *) throw (CORBA::Exception);
-    CORBA_Object __this() throw (CORBA::Exception);
+    CORBA_Object __this(CORBA_Environment *);
+    CORBA_Object __this();
   };
 
  /*
@@ -339,12 +343,12 @@ namespace PortableServer{
     /*!
      * @brief (TODO)
      */
-    void activate() throw (CORBA::Exception);
+    void activate();
     /*!
      * @brief (TODO)
      */
     void deactivate(CORBA::Boolean etherealize,
-		    CORBA::Boolean wait_for_completion) throw (CORBA::Exception);
+		    CORBA::Boolean wait_for_completion);
 
   };
 

@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 set(TARGET RtORB_cpp)
-set(SOURCES corba.cc poa.cc CosName.cc corba-any.cc corba-exception.cc orb.cc cdrStream.cpp)
+set(SOURCES corba.cc poa.cc CosName.cc corba-any.cc corba-exception.cc orb.cc cdrStream.cpp CosNaming-skelimpl.cc)
 
 IF("${OS_NAME}" MATCHES "FreeBSD")
 add_definitions(-D${OS_NAME} -DUSE_UUID)

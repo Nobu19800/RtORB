@@ -279,8 +279,18 @@ namespace CORBA{
   {
     return Object_ptr(_obj);
   }
+  
+  Object_var::operator Object_ptr () const
+  {
+    return Object_ptr(_obj);
+  }
     
   Object * Object_var::operator->()
+  {
+    return _obj;
+  }
+  
+  Object * Object_var::operator->() const
   {
     return _obj;
   }

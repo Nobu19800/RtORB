@@ -1202,7 +1202,11 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
 
        if (tc_ == NULL) { tc_ = CORBA_TypeCode_get(tk_null); }
           Address_Alignment(current, 4);
-	  marshal_typecode(buf, current, tc_);
+
+         if (tc->kind != tk_except)
+         {
+           marshal_typecode(buf, current, tc_);
+         }
 #if 0
           marshalLong(buf, current, any->_len);
 #endif

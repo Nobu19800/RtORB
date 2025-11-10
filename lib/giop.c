@@ -210,7 +210,7 @@ int reply_Message(GIOP_ConnectionHandler *h, GIOP_RequestHeader *request_header,
            octet *ebuf;
            ebuf=(octet *)RtORB_alloc(exception_size, "reply_Message:GIOP_SYSTEM_EXCEPTION");
 
-           marshalLong(ebuf, &current, reply_body->status);
+           //marshalLong(ebuf, &current, reply_body->status);
            marshal_Octet_Sequence(ebuf, &current, 
                           reply_body->exception.exception_id._buffer, id_len);
            marshalLong(ebuf, &current, reply_body->exception.minor_code_value);

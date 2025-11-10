@@ -207,15 +207,15 @@ namespace CORBA{
       /*!
        * @brief (TODO)
        */	  
-      Object_ptr resolve_initial_references(char *name) throw (Exception);
+      Object_ptr resolve_initial_references(char *name);
       /*!
        * @brief (TODO)
        */
-      String_ptr object_to_string(Object_ptr obj) throw (Exception);
+      String_ptr object_to_string(Object_ptr obj);
       /*!
        * @brief (TODO)
        */
-      String_ptr object_to_string2(CORBA_Object obj) throw (Exception);
+      String_ptr object_to_string2(CORBA_Object obj);
       /*!
        * @brief (TODO)
        */
@@ -245,7 +245,7 @@ namespace CORBA{
     /*!
      * @brief (TODO)
      */
-    Object_ptr string_to_object(const char*) throw (Exception);
+    Object_ptr string_to_object(const char*);
 
     /*!
      * @brief (TODO)

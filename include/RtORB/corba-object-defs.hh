@@ -255,11 +255,13 @@ namespace CORBA {
      * @brief (TODO)
      */
     operator Object_ptr ();
+    operator Object_ptr () const;
 
     /*!
      * @brief (TODO)
      */    
     Object * operator->();
+    Object * operator->() const;
     /*!
      * @brief (TODO)
      */

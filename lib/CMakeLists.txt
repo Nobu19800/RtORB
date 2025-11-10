@@ -36,6 +36,7 @@ set(SOURCES
 	connection.c 
 	server_loop.c
         ./CosName/NameService_impl.c
+        #./CosName/CosNaming-skelimpl.c
 	${OUTPUT_SOURCES}
  )
 
