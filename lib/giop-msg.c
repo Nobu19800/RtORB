@@ -71,7 +71,7 @@ void delete_CORBA_Sequence_Octet(CORBA_Sequence_Octet *seq, int flag){
     RtORB_free(seq->_buffer, "delete_CORBA_Sequence_Octet(buffer)");
   }
   if (flag){
-    RtORB_free(seq, "delete_CORBA_Sequence_Octet");
+    //RtORB_free(seq, "delete_CORBA_Sequence_Octet");
   }
 }
 
@@ -80,7 +80,7 @@ void delete_CORBA_Sequence_Octet2(CORBA_Sequence_Octet *seq, int flag){
     RtORB_free(seq->_buffer, "delete_CORBA_Sequence_Octet(buffer)");
   }
   if (flag){
-    RtORB_free(seq, "delete_CORBA_Sequence_Octet(seq)");
+    //RtORB_free(seq, "delete_CORBA_Sequence_Octet(seq)");
   }
 }
 
