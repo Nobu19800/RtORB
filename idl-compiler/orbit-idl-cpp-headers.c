@@ -661,6 +661,8 @@ static void ch_output_cpp_interface_stub(IDL_tree tree, OIDL_Run_Info *rinfo, OI
   fprintf(ci->fh, "    %s() : _super_type() {}\n\n", id);
   fprintf(ci->fh, "  public:\n");
   fprintf(ci->fh, "    %s(CORBA_Object impl) : CORBA::Object(impl) {}\n\n", id);
+  
+  fprintf(ci->fh, "    static CORBA_TypeCode _type_code() { return TC_%s_%s; }\n\n", mod_id, id);
 
   fprintf(ci->fh, "    %s * operator->() { return this; };\n", id);
   fprintf(ci->fh, "    %s & operator=(CORBA_Object);\n", id);

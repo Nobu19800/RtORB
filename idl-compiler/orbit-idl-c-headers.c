@@ -54,6 +54,27 @@ orbit_idl_output_c_headers (IDL_tree tree, OIDL_Run_Info *rinfo, OIDL_C_Info *ci
     /* for C++ */
     fprintf(ci->fh, "#ifdef __cplusplus\n");
     fprintf(ci->fh, "#include <RtORB/corba.hh>\n");
+    
+    fprintf(ci->fh, "#ifndef CORBA_VAR_INIT\n");
+    fprintf(ci->fh, "#ifdef __cplusplus\n");
+    fprintf(ci->fh, "inline void CORBA_VAR_INIT_impl(char *&dst, char *src, const char *msg) {\n");
+    fprintf(ci->fh, "    dst = RtORB__strdup(src, msg);\n");
+    fprintf(ci->fh, "}\n");
+    fprintf(ci->fh, "template <typename Dst, typename Src>\n");
+    fprintf(ci->fh, "inline void CORBA_VAR_INIT_impl(Dst &dst, const Src &src, const char * /*msg*/) {\n");
+    fprintf(ci->fh, "    dst = src;\n");
+    fprintf(ci->fh, "}\n");
+    fprintf(ci->fh, "#define CORBA_VAR_INIT(dst, src, msg) \\\n");
+    fprintf(ci->fh, "CORBA_VAR_INIT_impl(dst, src, msg)\n");
+    fprintf(ci->fh, "#else /* __cplusplus */\n");
+    fprintf(ci->fh, "#define CORBA_VAR_INIT(dst, src, msg) _Generic((dst), \\\n");
+    fprintf(ci->fh, "    char*: (dst = RtORB__strdup(src, msg)), \\\n");
+    fprintf(ci->fh, "    default: ((dst) = (src)) \\\n");
+    fprintf(ci->fh, ")\n");
+    fprintf(ci->fh, "#endif /* __cplusplus */\n");
+    fprintf(ci->fh, "#endif /* CORBA_VAR_INIT */\n");    
+    
+    
     fprintf(ci->fh, "extern \"C\" {\n");
     fprintf(ci->fh, "#endif /* __cplusplus */\n\n");
   }
@@ -649,7 +670,44 @@ ch_output_type_struct(IDL_tree tree, OIDL_Run_Info *rinfo, OIDL_C_Info *ci, int 
     }
 
     fprintf(ci->fh, "  }\n");
-    fprintf(ci->fh, "  CORBA_TypeCode _type_code() { return TC_%s; }\n", id);
+    
+    fprintf(ci->fh, "  %s_type(const %s_type& other){\n", id, id);
+    for(cur = IDL_TYPE_STRUCT(tree).member_list; cur; cur = IDL_LIST(cur).next) {
+      for(curmem = IDL_MEMBER(IDL_LIST(cur).data).dcls; curmem; curmem = IDL_LIST(curmem).next) {
+        IDL_tree name = IDL_LIST(curmem).data;
+        switch(IDL_NODE_TYPE(name)) {
+          case IDLN_IDENT:
+            fprintf(ci->fh, "    CORBA_VAR_INIT(this->%s, other.%s, \"%s():%s\");\n", IDL_IDENT(name).str, IDL_IDENT(name).str, id , IDL_IDENT(name).str);
+            break;
+          default:
+            g_error("Weird varname - %s", IDL_tree_type_names[IDL_NODE_TYPE(name)]);
+            break;
+        }
+      }
+    }
+    fprintf(ci->fh, "  }\n");
+    
+    fprintf(ci->fh, "  %s_type& operator=(const %s_type& other){\n", id, id);
+    fprintf(ci->fh, "    if (this != &other) {\n", id);
+    for(cur = IDL_TYPE_STRUCT(tree).member_list; cur; cur = IDL_LIST(cur).next) {
+      for(curmem = IDL_MEMBER(IDL_LIST(cur).data).dcls; curmem; curmem = IDL_LIST(curmem).next) {
+        IDL_tree name = IDL_LIST(curmem).data;
+        switch(IDL_NODE_TYPE(name)) {
+          case IDLN_IDENT:
+            fprintf(ci->fh, "      CORBA_VAR_INIT(this->%s, other.%s, \"%s():%s\");\n", IDL_IDENT(name).str, IDL_IDENT(name).str, id , IDL_IDENT(name).str);
+            break;
+          default:
+            g_error("Weird varname - %s", IDL_tree_type_names[IDL_NODE_TYPE(name)]);
+            break;
+        }
+      }
+    }
+    fprintf(ci->fh, "    }\n");
+    fprintf(ci->fh, "    return *this;\n", id);
+    fprintf(ci->fh, "  }\n");
+    
+    
+    fprintf(ci->fh, "  static CORBA_TypeCode _type_code() { return TC_%s; }\n", id);
     fprintf(ci->fh, "  ~%s_type() { RtORB_free_by_typecode_cpp(TC_%s, this, 0);}\n", id, id);
     fprintf(ci->fh, "  void operator>>=(cdrStream &) const;\n");
     fprintf(ci->fh, "  void operator<<=(cdrStream &);\n");
@@ -764,7 +822,7 @@ ch_output_type_union(IDL_tree tree, OIDL_Run_Info *rinfo, OIDL_C_Info *ci)
       g_free(type);
     
     }
-    fprintf(ci->fh, "  CORBA_TypeCode _type_code() { return TC_%s; }\n", id);
+    fprintf(ci->fh, "  static CORBA_TypeCode _type_code() { return TC_%s; }\n", id);
   
     fprintf(ci->fh, "  inline void operator>>=(cdrStream &s) const{ /* marshal union */\n");
     fprintf(ci->fh, "    __d >>= s;\n");
