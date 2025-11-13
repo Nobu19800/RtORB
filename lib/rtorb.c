@@ -110,7 +110,9 @@ void invokeMethod_via_GIOP(CORBA_Object obj,
      if(arg_buf){ RtORB_free(arg_buf,"invokeMethod_via_GIOP(arg_buf)"); }
       if(req_buf){ RtORB_free(req_buf,"invokeMethod_via_GIOP(req_buf)"); }
       if(buf){ RtORB_free(buf,"invokeMethod_via_GIOP(buf)"); }
-      exit(1);
+      env->_major = CORBA_SYSTEM_EXCEPTION;
+      //exit(1);
+      return;
   }
 
   /* check location */
@@ -300,5 +302,20 @@ void invokeMethod(CORBA_Object obj,
   info = (PortableServer_ClassInfo *)poa_obj->_private;
   PortableServer_ServantBase *sb = (PortableServer_ServantBase*)poa_obj->servant;
   call_impl_func = (impl_func_type)(*info->impl_finder)(&sb->_private, method->name, &m_data, &impl_method );
+  if (!call_impl_func){
+      
+      if(!strcmp(method->name, "_is_a") && sb->vepv && sb->vepv[0]->is_a ){
+	  *(CORBA_boolean*)retval = (void*)(sb->vepv[0]->is_a)(&sb->_private, *(char **)(args[0]) , env );
+	  return;
+      }
+      else if(!strcmp(method->name, "_non_existent") && sb->vepv && sb->vepv[0]->non_existent ){
+	  *(CORBA_boolean*)retval = (void*)(sb->vepv[0]->non_existent)(&sb->_private, env );
+	  return;
+      }
+      else{
+        fprintf(stderr, "No such a Function: %s\n", method->name);
+        return;
+      }
+  }
   (*call_impl_func)(sb, retval, m_data, args, env, impl_method);
 }

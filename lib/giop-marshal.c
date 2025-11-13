@@ -637,6 +637,7 @@ demarshal_by_typecode(void **dist, CORBA_TypeCode tc, octet *buf, int *current, 
         } else {
           *current += len;
         }
+        Address_Alignment(current, 4);
       }
       break;
 
@@ -1202,16 +1203,15 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
 
        if (tc_ == NULL) { tc_ = CORBA_TypeCode_get(tk_null); }
           Address_Alignment(current, 4);
-
-         if (tc_->kind != tk_except)
-         {
-           marshal_typecode(buf, current, tc_);
-         }
 #if 0
           marshalLong(buf, current, any->_len);
 #endif
          int32_t len;
          char *v = CORBA_any_get_encoded(any, &len);
+         if (tc_->kind != tk_except)
+         {
+           marshal_typecode(buf, current, tc_);
+         }
          if (v) {
            memcpy(&buf[*current], v, len); *current += len;
          } else {

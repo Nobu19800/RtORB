@@ -168,6 +168,19 @@ namespace CORBA{
     if(!_impl) return TRUE;
     return CORBA_Object_non_existent(_impl, &env);
   }
+  
+  
+  CORBA_boolean Object::_is_a(const CORBA_char * id)
+  {
+    CORBA_Environment env;
+    CORBA_Object tmp = _impl;
+    if(!_impl) return TRUE;
+    CORBA_char* id_ = RtORB__strdup(id, "Object::_is_a():id");
+    CORBA_boolean ret = CORBA_Object_is_a(_impl, (unsigned char*)id_, &env);
+    RtORB_free(id_, "Object::_is_a():id");
+    return ret;
+  }
+  
 
   /* #############################################
    *

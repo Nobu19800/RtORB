@@ -618,15 +618,40 @@ CORBA_Object_is_a(CORBA_Object object,
 		unsigned char *logical_type_id,
 		CORBA_Environment *env)
 {
+  /*
   if(!strcmp((char *)object->repository_id, (const char *)logical_type_id)) return TRUE;
   if(!strcmp((char *)logical_type_id, "IDL:omg.org/CORBA/Object:1.0")) return TRUE;
   return FALSE;
+  */
+  void *_args[1];
+  _args[0] = (void *) &logical_type_id;
+  CORBA_IArg _is_a_arginfo[] = {
+     {TC_CORBA_string, CORBA_I_ARG_IN, "logical_type_id"}
+  };
+  CORBA_Class_Method method = {
+      "_is_a",
+      TC_CORBA_boolean,
+      1, _is_a_arginfo,
+      0, NULL};
+  CORBA_boolean _ORBIT_retval;
+  invokeMethod (object, &method, (void **)&_ORBIT_retval, _args, env );
+  return _ORBIT_retval;
 }
 
 boolean
 CORBA_Object_non_existent(CORBA_Object object, CORBA_Environment *env){
-  if(object->ref == 0) return FALSE;
-  return TRUE;
+  //if(object->ref == 0) return FALSE;
+  //return TRUE;
+  CORBA_IArg _non_existent__arginfo[] = {
+  };
+  CORBA_Class_Method method = {
+      "_non_existent",
+      TC_CORBA_boolean,
+      0, _non_existent__arginfo,
+      0, NULL};
+  CORBA_boolean _ORBIT_retval;
+  invokeMethod (object, &method, (void **)&_ORBIT_retval, NULL, env );
+  return _ORBIT_retval;
 }
 
 uint32_t
