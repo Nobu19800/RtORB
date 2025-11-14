@@ -321,7 +321,7 @@ RtORB_free_by_typecode_cpp(CORBA_TypeCode tc, void *val, int32_t flag){
 	 break;
   }
   if(flag){
-     RtORB_free(val, "RtORB_free_by_typecode_cpp");
+     //RtORB_free(val, "RtORB_free_by_typecode_cpp");
   }
   return;
 }
