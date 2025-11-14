@@ -296,7 +296,15 @@ RtORB_free_by_typecode_cpp(CORBA_TypeCode tc, void *val, int32_t flag){
 
 	   for(i=0;i< tc->member_count;i++){
              _tc = tc->member_type[i];
-	     tc_size = size_of_typecode(_tc, F_DEMARSHAL);
+	     
+	     if(_tc->kind == tk_objref)
+             {
+               tc_size = sizeof(void *);
+             }
+             else
+             {
+	       tc_size = size_of_typecode(_tc, F_DEMARSHAL);
+	     }
              Address_Alignment(&align, align_of_typecode(_tc, F_DEMARSHAL));
 	     tmp = (char *)val + align;
              RtORB_free_by_typecode_cpp(_tc, tmp, 0);
