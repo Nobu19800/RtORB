@@ -137,7 +137,14 @@ uint32_t size_of_typecode(CORBA_TypeCode tc, int flag)
 */
        for(i=0, size=0; i<tc->member_count;i++){
            Address_Alignment(&size, align_of_typecode(tc->member_type[i], flag));
-           size += size_of_typecode(tc->member_type[i], flag);
+           if(flag == F_DEMARSHAL && tc->member_type[i]->kind == tk_objref)
+           {
+             size += sizeof(void *);
+           }
+           else
+           {
+             size += size_of_typecode(tc->member_type[i], flag);
+           }
            if (i == (tc->member_count - 1)) {
                Address_Alignment(&size, align_of_typecode(tc, flag)); /* Last padding */
            }
@@ -152,7 +159,7 @@ uint32_t size_of_typecode(CORBA_TypeCode tc, int flag)
        size += size_of_typecode(tc->discriminator, flag);
        return size;
     case tk_objref:
-       return sizeof(CORBA_Object);
+       return sizeof(CORBA_Object_struct);
 
     case tk_string:
       if(flag == F_MARSHAL) return 4;
@@ -630,6 +637,7 @@ demarshal_by_typecode(void **dist, CORBA_TypeCode tc, octet *buf, int *current, 
 
     case tk_string:
       {
+        Address_Alignment(current, 4);
         len = demarshalLong(buf, current, order);
         if (dist) {
           *dist = (void *)RtORB_alloc(len, "demarshal_by_typecode(string)");
@@ -1130,7 +1138,15 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
           _buffer = (void **)((char *)argv + cpos);
 
           marshal_by_typecode(buf, _buffer, ctc, current);
-          cpos = cpos + size_of_typecode(ctc, F_DEMARSHAL);
+          
+          if(ctc->kind == tk_objref)
+          {
+            cpos = cpos + sizeof(void *);
+          }
+          else
+          {
+            cpos = cpos + size_of_typecode(ctc, F_DEMARSHAL);
+          }
         }
       }
       break;
@@ -1202,16 +1218,15 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
 
        if (tc_ == NULL) { tc_ = CORBA_TypeCode_get(tk_null); }
           Address_Alignment(current, 4);
-
-         if (tc->kind != tk_except)
-         {
-           marshal_typecode(buf, current, tc_);
-         }
 #if 0
           marshalLong(buf, current, any->_len);
 #endif
          int32_t len;
          char *v = CORBA_any_get_encoded(any, &len);
+         if (tc_->kind != tk_except)
+         {
+           marshal_typecode(buf, current, tc_);
+         }
          if (v) {
            memcpy(&buf[*current], v, len); *current += len;
          } else {

@@ -193,6 +193,10 @@ namespace CORBA {
      * @brief (TODO)
      */
     CORBA_boolean _non_existent();
+    /*!
+     * @brief (TODO)
+     */
+    virtual CORBA_boolean _is_a(const CORBA_char * id);
     
   };
 
@@ -374,7 +378,17 @@ public:
   static T * narrow(CORBA::Object_ptr ptr) {
     if (!ptr) { return NULL; }
     CORBA_Object impl = ptr.impl();
-    return new T(impl);
+    
+    T * obj = new T(impl);
+    return obj;
+    if(obj->_is_a((const CORBA_char *)T::_type_code()->repository_id))
+    { 
+      return obj;
+    }
+    else
+    {
+      return NULL;
+    }
   }
 };
 

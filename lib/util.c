@@ -280,7 +280,11 @@ void dump_value_by_typecode(void *val, CORBA_TypeCode tc){
     case tk_sequence:
        fprintf(stderr, "Sequence found --0x%x ---\n", val);
        fprintf(stderr, "  len=%d ---\n", ((CORBA_SequenceBase *)val)->_length);
-       dump_value_by_typecode(((CORBA_SequenceBase *)val)->_buffer, tc->member_type[i]);
+       for(i=0;i<((CORBA_SequenceBase *)val)->_length;i++){
+           fprintf(stderr, "address val = %x\n", (int)val);
+           dump_value_by_typecode(((CORBA_SequenceBase *)val)->_buffer, tc->member_type[i]);
+           val += size_of_typecode(tc->member_type[i], F_DEMARSHAL);
+       }
        fprintf(stderr, "==== Sequence\n");
        break;
     case tk_except:

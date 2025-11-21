@@ -651,6 +651,7 @@ PortableServer_ServantBase__is_a(PortableServer_Servant servant, const char *id,
   if(!strcmp(id, info->class_name)) return TRUE;
 
   clsimpl = info->class_impl;
+  if(!strcmp(id, clsimpl->tc->repository_id)) return TRUE;
   for (i=0; i<clsimpl->n_base_types; i++) {
 #ifdef DEBUG
     fprintf(stderr, "\tinherited from %s\n", clsimpl->base_types[i]);
