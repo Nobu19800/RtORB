@@ -49,7 +49,7 @@ int Create_Tag_Internet_IOP(char *dist, int sock, char *object_key){
    CORBA_Sequence code_sets = { 7, 7, code_sets_data, 0, tk_long };
 
    char *hostname = (char *)get_ip_address(sock);
-   if(!hostname) hostname = "127.0.0.1";
+   if(!hostname) hostname = RtORB_strdup("127.0.0.1", "hostname:127.0.0.1");
    unsigned short port = get_socket_port(sock);
 
    dist[current++]=1; /* little endian */
@@ -251,7 +251,7 @@ int parseIOR(CORBA_URL **data, octet *ior, int *pos, int byte_order){
 
         url->hostname = demarshalString((octet *)ior, pos, url->byte_order, &tmp);
         Address_Alignment(pos, 2);
-        url->port = demarshalShort(ior, pos, url->byte_order);
+        url->port = demarshalShort((octet *)ior, pos, url->byte_order);
         Address_Alignment(pos, 4);
   
         url->object_key = demarshalString((octet *)ior, pos, url->byte_order,

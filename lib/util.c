@@ -246,7 +246,8 @@ void  dumpMessage(unsigned char *buf, int32_t size){
 
 void dump_value_by_typecode(void *val, CORBA_TypeCode tc){
 #if DEBUG
-  int i;
+  int i, length;
+  int pos = 0;
   SKIP_ALIAS(tc);
 
   switch(tc->kind){
@@ -279,11 +280,19 @@ void dump_value_by_typecode(void *val, CORBA_TypeCode tc){
        break;
     case tk_sequence:
        fprintf(stderr, "Sequence found --0x%x ---\n", val);
-       fprintf(stderr, "  len=%d ---\n", ((CORBA_SequenceBase *)val)->_length);
-       for(i=0;i<((CORBA_SequenceBase *)val)->_length;i++){
+       length = ((CORBA_SequenceBase *)val)->_length;
+       fprintf(stderr, "  len=%d ---\n", length);
+       for(i=0;i<length;i++){
            fprintf(stderr, "address val = %x\n", (int)val);
-           dump_value_by_typecode(((CORBA_SequenceBase *)val)->_buffer, tc->member_type[i]);
-           val += size_of_typecode(tc->member_type[i], F_DEMARSHAL);
+           //dump_value_by_typecode(((CORBA_SequenceBase *)val)->_buffer+pos, tc->member_type[0]);
+           if(tc->member_type[0] == tk_objref)
+           {
+             pos += sizeof(void *);
+           }
+           else
+           {
+             pos += size_of_typecode(tc->member_type[0], F_DEMARSHAL);
+           }
        }
        fprintf(stderr, "==== Sequence\n");
        break;
@@ -292,8 +301,15 @@ void dump_value_by_typecode(void *val, CORBA_TypeCode tc){
        fprintf(stderr, "Struct found-- 0x%x ----\n", val);
        for(i=0;i<tc->member_count;i++){
          fprintf(stderr, "address val = %x\n", (int)val);
-	 dump_value_by_typecode(val,  tc->member_type[i]);
-	 val += size_of_typecode(tc->member_type[i], F_DEMARSHAL);
+	 //dump_value_by_typecode(val,  tc->member_type[i]);
+	 if(tc->member_type[i] == tk_objref)
+         {
+           val += sizeof(void *);
+         }
+         else
+         {
+	   val += size_of_typecode(tc->member_type[i], F_DEMARSHAL);
+	 }
        }
        fprintf(stderr, "==== Struct\n");
        break;
@@ -375,12 +391,15 @@ char *Octet2String(octet *str, int len){
   int i,len2;
 
   len2 = len << 1;
-  result = (char *)RtORB_alloc(len2, "Octet2String");
+
+  result = (char *)RtORB_alloc(len2+1, "Octet2String");
 
   for(i=0;i<len;i++){
     result[i*2] = Hex2Char[str[i] >> 4];
     result[i*2+1] = Hex2Char[str[i] & 0x0f];
   }
+  result[len2] = '\0';
+
   return result;
 }
 

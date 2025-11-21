@@ -698,3 +698,20 @@ void select_socket_servers(struct timeval time_out)
   select_socket_ports( &main_socket_bits, time_out);
 }
 
+int is_own_address(const char *target_address, const char *server_address)
+{
+    if(strcmp(target_address, server_address) == 0)
+    {
+      return 1;
+    }
+    else if(strcmp(target_address, "127.0.0.1") == 0)
+    {
+      return 1;
+    }
+    else if(strcmp(target_address, "localhost") == 0)
+    {
+      return 1;
+    }
+    return 0;
+}
+

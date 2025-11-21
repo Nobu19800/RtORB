@@ -588,7 +588,6 @@ demarshal_by_typecode(void **dist, CORBA_TypeCode tc, octet *buf, int *current, 
 #ifdef DEBUG_MARSHAL
      fprintf(stderr, "  >>> %s : %d<<< (%d)\n", tc->repository_id,tc->kind, *current);
 #endif
-
   switch(tc->kind)
   {
     case tk_null:
@@ -919,8 +918,14 @@ demarshal_by_typecode(void **dist, CORBA_TypeCode tc, octet *buf, int *current, 
 			(int)tc->kind );
         return 0;
   }
-
-  return size_of_typecode(tc,F_DEMARSHAL);
+  if(tc->kind == tk_objref)
+  {
+    return sizeof(void*);
+  }
+  else
+  {
+    return size_of_typecode(tc,F_DEMARSHAL);
+  }
 }
 
 /*
@@ -1001,7 +1006,7 @@ deMarshal_Result(void **retval, CORBA_TypeCode tc, octet *buf,
      case tk_any:
        {
 	 /* Returned type is pointer. */
-	 void **val = (void **)RtORB_typecode_alloc(tc);
+	 void **val = (void **)RtORB_typecode_calloc(tc);
          demarshal_by_typecode(val, tc, buf, size, order);
           *retval = val;
        }
@@ -1096,7 +1101,16 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
         int cpos=0;
         int align_base;
 
-        int skip =  size_of_typecode(tc->member_type[0], F_DEMARSHAL);
+        int skip;
+        if(tc->member_type[0]->kind == tk_objref)
+        {
+          skip = sizeof(void *);
+        }
+        else
+        {
+          skip =  size_of_typecode(tc->member_type[0], F_DEMARSHAL);
+        }
+        //int skip =  sizeof(void*);
         CORBA_SequenceBase *sb = (CORBA_SequenceBase *)argv;
 
         marshalLong(buf, current, sb->_length);
@@ -1195,10 +1209,14 @@ int marshal_by_typecode(octet *buf, void *argv, CORBA_TypeCode tc, int *current)
           marshalLong(buf, current, 1);
           marshalOctet(buf, current, '\0');
           marshalLong(buf, current, 0);
-        } else if (obj->_url){
-          memcpy(buf + (*current), obj->_url[0]._ior_string, obj->_url[0]._ior_string_len);
-          *current += obj->_url[0]._ior_string_len;
-        }else{
+        } 
+        
+        else if (obj->_url){
+          memcpy(buf + (*current), obj->_url->_ior_string, obj->_url->_ior_string_len);
+          *current += obj->_url->_ior_string_len;
+        }
+        
+        else{
           if(!obj->_ior_string){
             CORBA_Object__to_string(obj, &env);
           }

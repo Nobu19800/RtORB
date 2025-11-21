@@ -399,11 +399,11 @@ impl_CosNaming_NamingContext_rebind(
     }
     catch(const CosNaming::NamingContext::NotFound& e)
     {
-        CosNaming_NamingContext_NotFound *value =
-	  (CosNaming_NamingContext_NotFound *)RtORB_alloc(sizeof(CosNaming_NamingContext_NotFound), "CosNaming_NotFound");
-	CosNaming::NamingContext::NotFound tmp(e);
-	value->why = tmp.why();
-	tmp.rest_of_name().copyTo(value->rest_of_name);
+        CosNaming_NamingContext_NotFound *value = CosNaming_NamingContext_NotFound__calloc();
+	//CosNaming::NamingContext::NotFound tmp(e);
+	value->why = e.why();
+	const CosNaming::Name& n(e.rest_of_name());
+	value->rest_of_name = e.rest_of_name();
 	//ex->rest_of_name = CORBA_Object_dup((CORBA_Object_struct *)tmp.rest_of_name().cobj()); 	
     	CORBA_user_exception_set(ev, ex_CosNaming_NamingContext_NotFound,
 		   TC_CosNaming_NamingContext_NotFound, value);
@@ -456,7 +456,7 @@ impl_CosNaming_NamingContext_resolve(
   CosNaming_Name* n,
   CORBA_Environment *ev)
 {
-  CORBA_Object retval;
+  CORBA_Object retval = NULL;
   memset(ev, 0, sizeof(CORBA_Environment));
 #if __cplusplus
     try
@@ -470,11 +470,10 @@ impl_CosNaming_NamingContext_resolve(
     }
     catch(const CosNaming::NamingContext::NotFound& e)
     {
-        CosNaming_NamingContext_NotFound *value =
-	  (CosNaming_NamingContext_NotFound *)RtORB_alloc(sizeof(CosNaming_NamingContext_NotFound), "CosNaming_NotFound");
-	CosNaming::NamingContext::NotFound tmp(e);
-	value->why = tmp.why();
-	tmp.rest_of_name().copyTo(value->rest_of_name);
+        CosNaming_NamingContext_NotFound *value = CosNaming_NamingContext_NotFound__calloc();
+	//CosNaming::NamingContext::NotFound tmp(e);
+	value->why = e.why();
+	e.rest_of_name().copyTo(value->rest_of_name);
 	//ex->rest_of_name = CORBA_Object_dup((CORBA_Object_struct *)tmp.rest_of_name().cobj()); 	
     	CORBA_user_exception_set(ev, ex_CosNaming_NamingContext_NotFound,
 		   TC_CosNaming_NamingContext_NotFound, value);

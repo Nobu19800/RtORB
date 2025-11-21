@@ -85,6 +85,7 @@ void * RtORB_alloc_by_typecode(CORBA_TypeCode tc, int32_t len, const char *info)
  * @return memory address 
  */
 void * RtORB_typecode_alloc(CORBA_TypeCode tc);
+void * RtORB_typecode_calloc(CORBA_TypeCode tc);
 
 /*!
  * @if jp

@@ -502,7 +502,15 @@ CORBA_ORB_string_to_object(CORBA_ORB orb, unsigned char *str,
     RtORB_free(obj->connection->hostname, "CORBA_ORB_string_to_object");
     obj->connection->hostname=(unsigned char *)RtORB_strdup(obj->_url[0].hostname, "string_to_object");
     obj->connection->port = obj->_url[0].port;
-    obj->poa = 0;
+    PortableServer_POA poa = PortableServer_root_POA(env);//(PortableServer_POA)((CORBA_Object)CORBA_ORB_resolve_initial_references(orb, "RootPOA",  env))->poa;
+    if((poa->_server->port == obj->connection->port) && (is_own_address(obj->connection->hostname, poa->_server->hostname)==1))
+    {
+      obj->poa = poa;
+    }
+    else
+    {
+      obj->poa = 0;
+    }
     if(obj->_url[0].type_id){
       obj->typedId = (unsigned char *)obj->_url[0].type_id;
     }

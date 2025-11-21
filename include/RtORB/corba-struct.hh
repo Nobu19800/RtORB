@@ -335,7 +335,9 @@ namespace CORBA_struct {
 #if DEBUG
 	fprintf(stderr, "DELETE strcut_var _ptr (0x%x)\n", _ptr);
 #endif
-	delete _ptr; _ptr = NULL;
+	//delete _ptr;
+	RtORB_free(_ptr, "_ptr");
+	_ptr = NULL;
       }
     }
   private:

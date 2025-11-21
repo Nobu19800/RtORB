@@ -164,8 +164,8 @@ namespace CORBA{
   {
     CORBA_Environment env;
     CORBA_Object tmp = _impl;
-    if(_ref > 0) return FALSE;
-    if(!_impl) return TRUE;
+    //if(_ref > 0) return FALSE;
+    //if(!_impl) return TRUE;
     return CORBA_Object_non_existent(_impl, &env);
   }
   
@@ -174,6 +174,7 @@ namespace CORBA{
   {
     CORBA_Environment env;
     CORBA_Object tmp = _impl;
+    //if(_ref == 0) return TRUE;
     if(!_impl) return TRUE;
     CORBA_char* id_ = RtORB__strdup(id, "Object::_is_a():id");
     CORBA_boolean ret = CORBA_Object_is_a(_impl, (unsigned char*)id_, &env);

@@ -259,8 +259,18 @@ RtORB_free_by_typecode_cpp(CORBA_TypeCode tc, void *val, int32_t flag){
 	     char *buf = (char *)sb->_buffer;
              void **tmp=0;
 	     CORBA_TypeCode _tc = tc->member_type[0];
-	     int32_t len = size_of_typecode(_tc, F_DEMARSHAL);
-	     int32_t base = align_of_typecode(_tc, F_DEMARSHAL);
+	     int32_t len;
+	     int32_t base;
+	     if(_tc->kind == tk_objref)
+	     {
+	     	len = sizeof(void*);
+	     	base = sizeof(void*);
+	     }
+	     else
+	     {
+	     	len = size_of_typecode(_tc, F_DEMARSHAL);
+	     	base = align_of_typecode(_tc, F_DEMARSHAL);
+	     }
        if(_tc->size == 1)
        {
          Address_Alignment(&align, base);
@@ -329,7 +339,7 @@ RtORB_free_by_typecode_cpp(CORBA_TypeCode tc, void *val, int32_t flag){
 	 break;
   }
   if(flag){
-     RtORB_free(val, "RtORB_free_by_typecode_cpp");
+     //RtORB_free(val, "RtORB_free_by_typecode_cpp");
   }
   return;
 }
@@ -482,6 +492,15 @@ void *
 RtORB_typecode_alloc(CORBA_TypeCode tc){
   //return (void *)RtORB_calloc(size_of_typecode(tc, F_DEMARSHAL), 1, "RtORB_typecode_alloc");
   return (void *)RtORB_alloc(size_of_typecode(tc, F_DEMARSHAL), "RtORB_typecode_alloc");
+}
+/*
+ * void *
+ * RtORB_typecode_calloc(CORBA_TypeCode)
+ *
+ */
+void *
+RtORB_typecode_calloc(CORBA_TypeCode tc){
+  return (void *)RtORB_calloc(size_of_typecode(tc, F_DEMARSHAL), 1, "RtORB_typecode_alloc");
 }
 /*
  * void

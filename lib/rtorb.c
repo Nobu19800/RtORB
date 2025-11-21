@@ -190,7 +190,7 @@ void invokeMethod_via_GIOP(CORBA_Object obj,
 
 	   void *value = NULL;
 	   if (size_of_typecode(method->exceptinfo[i], F_DEMARSHAL) > 0) {
-	     value = RtORB_typecode_alloc(method->exceptinfo[i]);
+	     value = RtORB_typecode_calloc(method->exceptinfo[i]);
 	     demarshal_by_typecode((void **)value, 
 	 	method->exceptinfo[i], body->_buffer, &pos, byte_order);
 	   }

@@ -49,6 +49,11 @@ void server_loop(float time_out_float, void (*idle)(void*), void *arg)
 	      - time1.tv_usec - time_out_float * 1000 ;
       if (time_cost > 0) usleep(time_cost);
 #endif 
+      PortableServer_POA poa = (PortableServer_POA)arg;
+      if(!poa->_server)
+      {
+        return;
+      }
   }
   return;
 }

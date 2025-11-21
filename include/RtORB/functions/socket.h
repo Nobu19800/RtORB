@@ -280,4 +280,6 @@ void select_socket_servers(struct timeval time_out);
  */
 void socket_main_loop(float time_out_float, void (*idle)(), void *arg);
 
+int is_own_address(const char *target_address, const char *server_address);
+
 #endif
