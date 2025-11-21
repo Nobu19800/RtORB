@@ -310,7 +310,7 @@ static void ch_output_cpp_execption(IDL_tree tree, OIDL_Run_Info *rinfo, OIDL_C_
       fprintf(ci->fh, "    ");
       fprintf(ci->fh, "%s _%s; \n", vartype, name);
       fprintf(ci->fh, "    ");
-      fprintf(ci->fh, "%s %s() { return _%s; }\n", type, name, name);
+      fprintf(ci->fh, "%s %s() const { return _%s; }\n", type, name, name);
     }
 
     g_free(vartype);
@@ -837,7 +837,8 @@ ch_output_cpp_poa(IDL_tree tree, OIDL_Run_Info *rinfo, OIDL_C_Info *ci, const ch
       fprintf(ci->fh, "      _impl = PortableServer_POA_servant_to_reference(poa->_impl, poa_servant, &ev);\n");
       fprintf(ci->fh, "      _impl->impl_obj = static_cast<CORBA::Object*>(this);\n");
       fprintf(ci->fh, "    }\n\n");
-      fprintf(ci->fh, "    ~%s() { delete _t; _t = NULL; }\n\n", id);
+      //fprintf(ci->fh, "    ~%s() { delete _t; _t = NULL; }\n\n", id);
+      fprintf(ci->fh, "    ~%s() {}\n\n", id);
       fprintf(ci->fh, "  private:\n");
       fprintf(ci->fh, "    T * _t;\n");
 

@@ -1286,6 +1286,8 @@ ch_type_alloc_and_tc(IDL_tree tree, OIDL_Run_Info *rinfo,
 #else
     fprintf (ci->fh, "#define %s__alloc() ((%s%s *)RtORB_typecode_alloc (%s))\n",
 	     ctmp, ctmp, (IDL_NODE_TYPE(tree) == IDLN_TYPE_ARRAY)?"_slice":"", tc);
+    fprintf (ci->fh, "#define %s__calloc() ((%s%s *)RtORB_typecode_calloc (%s))\n",
+	     ctmp, ctmp, (IDL_NODE_TYPE(tree) == IDLN_TYPE_ARRAY)?"_slice":"", tc);
 
 //    fprintf (ci->fh, "#define %s__freekids(m,d) RtORB__freekids (%s,(m),(d))\n", ctmp, tc);
 #endif
