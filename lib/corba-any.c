@@ -194,7 +194,7 @@ void * CORBA_any_get_value(CORBA_any* any)
   case tk_objref:
     return &val->val_obj;
   case tk_except:
-    return &val->val_except;
+    return val->val_except;
   case tk_struct:
     do_assert(0, "CORBA_any_get_value : struct has to be marshaled");
     break;

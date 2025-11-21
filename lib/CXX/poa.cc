@@ -68,7 +68,7 @@ namespace PortableServer{
     return new POA(impl);
   }
 
-  ObjectId_ptr POA::activate_object(ServantBase *sb) throw (CORBA::Exception) {
+  ObjectId_ptr POA::activate_object(ServantBase *sb) {
      PortableServer_ObjectId objid = PortableServer_POA_activate_object(_impl, sb->getServantBase(), &ev);
      catchAndThrowDefaultException(&ev);
      
@@ -80,6 +80,12 @@ namespace PortableServer{
     if (!id._impl) { return; }
     PortableServer_POA_deactivate_object(_impl, id._impl, &ev);
   }
+
+  void POA::reinstall_object(CORBA::Object_ptr obj, char *object_key)
+  {
+    PortableServer_POA_reinstall_object(_impl, obj, object_key, &ev);
+  }
+
 
 
   POAManager_ptr POA::the_POAManager(){
@@ -95,7 +101,7 @@ namespace PortableServer{
     PortableServer_POA_destory(_impl, &ev);
   }
 
-  ObjectId_ptr POA::servant_to_id(ServantBase *sb) throw (CORBA::Exception)
+  ObjectId_ptr POA::servant_to_id(ServantBase *sb)
   {
     if (!sb) {
       throw CORBA::SystemException("POA::servant_to_id : ServantBase is NULL");
@@ -113,7 +119,7 @@ namespace PortableServer{
 
   }
       
-  CORBA::Object_ptr POA::id_to_reference(const ObjectId &id) throw (CORBA::Exception)
+  CORBA::Object_ptr POA::id_to_reference(const ObjectId &id)
   {
     if (! (id._impl) || ! (id._impl->_this) ) {
       throw CORBA::SystemException("POA::id_to_reference : CORBA_Object is NULL");
@@ -121,7 +127,7 @@ namespace PortableServer{
     return id._impl->_this;
   }
 
-  CORBA::Object_ptr POA::servant_to_reference(ServantBase *sb) throw (CORBA::Exception)
+  CORBA::Object_ptr POA::servant_to_reference(ServantBase *sb)
   {
     if (!_impl) {
       throw CORBA::SystemException("POA::servant_to_reference : POA is NULL");
@@ -171,7 +177,7 @@ namespace PortableServer{
   }
 
 
-  CORBA_Object ServantBase::__this(CORBA_Environment *ev) throw (CORBA::Exception) {
+  CORBA_Object ServantBase::__this(CORBA_Environment *ev) {
     PortableServer_ServantBase *sb = getServantBase();
     if (!sb) { return CORBA::Object_ptr(); }
     RtORB_POA_Object *poa_obj = (RtORB_POA_Object *)(sb->_private);
@@ -183,7 +189,7 @@ namespace PortableServer{
     return poa_obj->obj;
   }
 
-  CORBA_Object ServantBase::__this() throw (CORBA::Exception) {
+  CORBA_Object ServantBase::__this() {
     PortableServer_ServantBase *sb = getServantBase();
     if (!sb) { return CORBA::Object_ptr(); }
     RtORB_POA_Object *poa_obj = (RtORB_POA_Object *)(sb->_private);
@@ -204,7 +210,7 @@ namespace PortableServer{
     return new POA(poa);
   }
 
-  POA_ptr ServantBase::_root_POA() throw (CORBA::Exception)
+  POA_ptr ServantBase::_root_POA()
   {
     CORBA_Environment ev;
     memset(&ev, 0x00, sizeof(ev));
@@ -221,12 +227,12 @@ namespace PortableServer{
 
   }
 
-  void POAManager::activate() throw (CORBA::Exception) {
+  void POAManager::activate() {
     PortableServer_POAManager_activate(_mgr, &_ev);
     catchAndThrowDefaultException(&_ev);
   }
 
-  void POAManager::deactivate(CORBA::Boolean etherealize, CORBA::Boolean wait_for_completion) throw (CORBA::Exception)
+  void POAManager::deactivate(CORBA::Boolean etherealize, CORBA::Boolean wait_for_completion)
   {
 	  PortableServer_POAManager_deactivate(_mgr,
 					       etherealize,
@@ -242,7 +248,7 @@ namespace PortableServer{
     return objid; 
   }
 
-  void POA::activate_object_with_id(ObjectId_ptr id, ServantBase *sb) throw (CORBA::Exception){
+  void POA::activate_object_with_id(ObjectId_ptr id, ServantBase *sb){
 
      return;
 

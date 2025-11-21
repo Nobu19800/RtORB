@@ -70,7 +70,7 @@ namespace CORBA
   }
 
 
-  Object_ptr ORB::resolve_initial_references(char *name) throw (Exception) {
+  Object_ptr ORB::resolve_initial_references(char *name) {
     CORBA_Object obj;
     if(!_impl) return Object_ptr();
     memset(&ev, 0, sizeof(CORBA_Environment));
@@ -89,21 +89,21 @@ namespace CORBA
     return FALSE;
   }
 
-  String_ptr ORB::object_to_string(Object_ptr obj) throw (Exception) {
+  String_ptr ORB::object_to_string(Object_ptr obj) {
     memset(&ev, 0, sizeof(CORBA_Environment));
     unsigned char * str = CORBA_ORB_object_to_string(_impl,  obj.impl(), &ev);
     catchAndThrowDefaultException(&ev);
     return (String_ptr)str;
   }
 
-  String_ptr ORB::object_to_string2(CORBA_Object obj) throw (Exception) {
+  String_ptr ORB::object_to_string2(CORBA_Object obj) {
     memset(&ev, 0, sizeof(CORBA_Environment));
     unsigned char * str = CORBA_ORB_object_to_string(_impl,  obj, &ev);
     catchAndThrowDefaultException(&ev);
     return (String_ptr)str;
   }
 
-  Object_ptr ORB::string_to_object(const char* str) throw (Exception)
+  Object_ptr ORB::string_to_object(const char* str)
   {
     char *p = const_cast<char*>(str);
     ev._major = 0;
